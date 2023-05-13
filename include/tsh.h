@@ -14,6 +14,7 @@ class simple_shell {
   void parse_command(char* cmd, char** cmdTokens);
   void exec_command(char** argv);
   bool isQuit(char* cmd);
+  void exec_command_pipe (int in, int out, char** cmdTokens);
 };
 
 #endif
