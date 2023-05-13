@@ -25,7 +25,6 @@ void simple_shell::exec_command(char** argv) {
         exit(1);
     } else if (rc == 0) {
         execvp(argv[0], argv);
-        cout << "test" << endl;
     } else {
         int wc = wait(NULL);
 	    assert(wc >= 0);

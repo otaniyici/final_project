@@ -23,10 +23,10 @@ int main() {
       curr_cmd = pipe_pos+1;
       pipe_pos = strchr(curr_cmd, '|');
     }
-    close(fd[1]);
-
+  
     int d = dup(0);
-    if (in != 0) {  
+    if (in != 0) {
+      close(fd[1]);
       dup2 (in, 0);
       close (in);
     }
