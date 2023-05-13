@@ -16,28 +16,30 @@ int main() {
       char *tokens[25];
       *pipe_pos = '\0';
       shell->parse_command(curr_cmd, tokens);
-
       pipe(fd);
       shell->exec_command_pipe(in, fd[1], tokens);
       in = fd[0];
       curr_cmd = pipe_pos+1;
       pipe_pos = strchr(curr_cmd, '|');
+      close(fd[1]);
     }
   
     int d = dup(0);
     if (in != 0) {
-      close(fd[1]);
       dup2 (in, 0);
       close (in);
     }
 
     char *tokens[25];
     shell->parse_command(curr_cmd, tokens);
-    if (shell->isQuit(*tokens)) {
+    if(cmd[0] != '\n') {
+      if (shell->isQuit(*tokens)) {
         exit(0);
       } else {
         shell->exec_command(tokens);
+      }
     }
+    
     dup2 (d, 0);
     close(d);
     cout << "tsh> ";
