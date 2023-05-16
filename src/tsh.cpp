@@ -13,7 +13,17 @@ void simple_shell::parse_command(char* cmd, char** cmdTokens) {
     int cmd_index = 0;
     while (cmd_stream >> token) {
         cmdTokens[cmd_index] = strdup(token.c_str());
-        cmd_index++;
+        if (simple_shell::alias_map.find(cmdTokens[cmd_index]) != simple_shell::alias_map.end()) {
+            string alias = simple_shell::alias_map[cmdTokens[cmd_index]];
+            istringstream alias_stream(alias);
+            while (alias_stream >> token) {
+                cmdTokens[cmd_index] = strdup(token.c_str());
+                cmd_index++;
+            }
+        }else {
+            cmd_index++;
+        }
+        
     }
     cmdTokens[cmd_index] = NULL;
 }

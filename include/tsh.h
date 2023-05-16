@@ -13,7 +13,7 @@ using namespace std;
 
 class simple_shell {
  public:
-  std::unordered_map<string, string> alias_map = {};
+  unordered_map<string, string> alias_map = {};
   void parse_command(char* cmd, char** cmdTokens);
   void exec_command(char** argv);
   bool isQuit(char* cmd);
