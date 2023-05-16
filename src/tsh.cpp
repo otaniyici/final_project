@@ -19,15 +19,15 @@ void simple_shell::parse_command(char* cmd, char** cmdTokens) {
 }
 
 void simple_shell::exec_command(char** argv) {
+    if (strcmp(argv[0], "alias")==0) {
+        simple_shell::alias(argv);
+        return;
+    }
     int rc = fork();
     if (rc < 0) {
         fprintf(stderr, "fork failed\n");
         exit(1);
     } else if (rc == 0) {
-        if (strcmp(argv[0], "alias")==0) {
-            simple_shell::alias(argv);
-            exit(0);
-        }
         int e = execvp(argv[0], argv);
         if (e == -1) {
             cout << "command not found" << endl;
@@ -40,21 +40,22 @@ void simple_shell::exec_command(char** argv) {
 }
 
 void simple_shell::alias(char** argv) {
+    if(argv[1] == NULL || strcmp(argv[1], "-p") == 0) {
+        for (const auto entry : simple_shell::alias_map) {
+            cout << "alias " << entry.first << "=" << entry.second << endl;
+        }
+        return;
+    }
     for(int i = 1; argv[i] != NULL && i < 25; i++) {
         char* key = argv[i];
         char* eq_pos = strchr(key, '=');
         *eq_pos = '\0';
         char* value = eq_pos + 1;
-        cout << key << endl;
-        cout << value << endl;
-        alias_map[key] = value;
-        cout << alias_map[key] << endl;
+        simple_shell::alias_map[key] = value;
         if(!eq_pos) {
             cout << "enter valid key=value pair" << endl;
         }
     }
-    
-    cout << "alias out" << endl;
 }
 
 void simple_shell::exec_command_pipe (int in, int out, char **cmdTokens) {
