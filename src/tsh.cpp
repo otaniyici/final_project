@@ -50,12 +50,14 @@ void simple_shell::exec_command(char** argv) {
 }
 
 void simple_shell::alias(char** argv) {
+    // if no arg or with -p flag print the key=value pairs
     if(argv[1] == NULL || strcmp(argv[1], "-p") == 0) {
         for (const auto entry : simple_shell::alias_map) {
             cout << "alias " << entry.first << "=" << entry.second << endl;
         }
         return;
     }
+    // add new key=value pairs to the hashmap
     for(int i = 1; argv[i] != NULL && i < 25; i++) {
         char* key = argv[i];
         char* eq_pos = strchr(key, '=');
@@ -75,7 +77,7 @@ void simple_shell::exec_command_pipe (int in, int out, char **cmdTokens) {
       fprintf(stderr, "fork failed\n");
       exit(1);
   }
-  
+  // copy and close the pipes
   if (rc == 0) {
       if (in != 0) {
           dup2 (in, 0);
