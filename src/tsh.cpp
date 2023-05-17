@@ -60,9 +60,28 @@ void simple_shell::alias(char** argv) {
     // add new key=value pairs to the hashmap
     for(int i = 1; argv[i] != NULL && i < 25; i++) {
         char* key = argv[i];
+        char* quot_pos = strchr(key, '"');
+        char *c;
+        if(quot_pos) {
+            c = (char*) malloc(strlen(argv[i]) + strlen(argv[i+1]) + 2);
+            if ( c != NULL ){
+                strcpy(c, argv[i]);
+                strcat(c, " ");
+                strcat(c, argv[i+1]);
+            }
+            key = c;
+            i++;
+        }
         char* eq_pos = strchr(key, '=');
         *eq_pos = '\0';
         char* value = eq_pos + 1;
+        quot_pos = strchr(value, '"');
+        if(quot_pos) {
+            value = quot_pos + 1;
+            quot_pos = strchr(value, '"');
+            *quot_pos = '\0';
+        }
+        
         simple_shell::alias_map[key] = value;
         if(!eq_pos) {
             cout << "enter valid key=value pair" << endl;
